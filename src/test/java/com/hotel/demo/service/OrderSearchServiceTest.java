@@ -6,9 +6,6 @@ import com.hotel.demo.model.dto.SearchResponse;
 import com.hotel.demo.model.entity.HotelBookingOrder;
 import com.hotel.demo.model.entity.OrderStatus;
 import com.hotel.demo.repository.OrderRepository;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,21 +32,10 @@ class OrderSearchServiceTest {
     private OrderRepository orderRepository;
     
     private OrderSearchService orderSearchService;
-    private SimpleMeterRegistry meterRegistry;
     
     @BeforeEach
     void setUp() {
-        meterRegistry = new SimpleMeterRegistry();
-        Counter searchRequestCounter = meterRegistry.counter("hotel.search.requests.total");
-        Counter searchErrorCounter = meterRegistry.counter("hotel.search.errors.total");
-        Timer searchLatencyTimer = meterRegistry.timer("hotel.search.latency");
-        
-        orderSearchService = new OrderSearchService(
-            orderRepository,
-            searchRequestCounter,
-            searchErrorCounter,
-            searchLatencyTimer
-        );
+        orderSearchService = new OrderSearchService(orderRepository);
     }
     
     @Test
