@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: hotel-demo-service
+  
+  main:
+    banner-mode: off
+
+  # Spring AI MCP Server
+  ai:
+    mcp:
+      server:
+        stdio: true
+  
+  cassandra:
+    keyspace-name: hotel_demo
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+    schema-action: none
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+    request:
+      timeout: 5s
+  
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+# Encryption
+jasypt:
+  encryptor:
+    algorithm: PBEWithHMACSHA512AndAES_256
+    key-obtention-iterations: 1000
+    pool-size: 1
+    provider-name: SunJCE
+    salt-generator-classname: org.jasypt.salt.RandomSaltGenerator
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
+    string-output-type: base64
+    password: ${JASYPT_PASSWORD:changeit}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.hotel.demo: DEBUG
+  pattern:
+    console:
+
+# Server
+server:
+  port: 8080
+  shutdown: graceful
+
+# Application properties
+app:
+  search:
+    min-confidence-threshold: 50
+    max-fuzzy-distance-percent: 10
