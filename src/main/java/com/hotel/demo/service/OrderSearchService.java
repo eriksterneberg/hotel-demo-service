@@ -8,8 +8,8 @@ import com.hotel.demo.model.dto.SearchResponse;
 import com.hotel.demo.model.dto.SearchResult;
 import com.hotel.demo.model.entity.HotelBookingOrder;
 import com.hotel.demo.repository.OrderRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -22,20 +22,17 @@ import java.util.regex.Pattern;
  * Service for searching hotel booking orders by customer email.
  * Supports exact email matching with 100% confidence scores.
  */
+@Slf4j
 @Service
 @Validated
+@RequiredArgsConstructor
 public class OrderSearchService {
     
-    private static final Logger log = LoggerFactory.getLogger(OrderSearchService.class);
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
         "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
     );
     
     private final OrderRepository orderRepository;
-    
-    public OrderSearchService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
     
     /**
      * Search for orders by customer email (exact match).

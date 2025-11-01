@@ -1,6 +1,9 @@
 package com.hotel.demo.model.entity;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -15,6 +18,9 @@ import java.util.UUID;
  * Hotel booking order entity representing a customer's hotel reservation.
  * Stored in Cassandra with PII fields encrypted at rest.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table("booking_orders")
 public class HotelBookingOrder {
     
@@ -78,31 +84,6 @@ public class HotelBookingOrder {
     @NotNull
     private Instant createdAt;
     
-    // Default constructor
-    public HotelBookingOrder() {
-    }
-    
-    // All-args constructor
-    public HotelBookingOrder(UUID orderId, String customerEmail, String customerEmailEncrypted,
-                            LocalDateTime bookingDateStart, LocalDateTime bookingDateEnd,
-                            String hotelName, String hotelAddress, String roomType,
-                            List<String> guestNames, String paymentMethod, BigDecimal totalAmount,
-                            OrderStatus orderStatus, Instant createdAt) {
-        this.orderId = orderId;
-        this.customerEmail = customerEmail;
-        this.customerEmailEncrypted = customerEmailEncrypted;
-        this.bookingDateStart = bookingDateStart;
-        this.bookingDateEnd = bookingDateEnd;
-        this.hotelName = hotelName;
-        this.hotelAddress = hotelAddress;
-        this.roomType = roomType;
-        this.guestNames = guestNames;
-        this.paymentMethod = paymentMethod;
-        this.totalAmount = totalAmount;
-        this.orderStatus = orderStatus;
-        this.createdAt = createdAt;
-    }
-    
     // Validation method
     @AssertTrue(message = "Check-out date must be after check-in date")
     public boolean isValidDateRange() {
@@ -110,110 +91,5 @@ public class HotelBookingOrder {
             return true; // Let @NotNull handle null validation
         }
         return bookingDateEnd.isAfter(bookingDateStart);
-    }
-    
-    // Getters and Setters
-    public UUID getOrderId() {
-        return orderId;
-    }
-    
-    public void setOrderId(UUID orderId) {
-        this.orderId = orderId;
-    }
-    
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-    
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-    
-    public String getCustomerEmailEncrypted() {
-        return customerEmailEncrypted;
-    }
-    
-    public void setCustomerEmailEncrypted(String customerEmailEncrypted) {
-        this.customerEmailEncrypted = customerEmailEncrypted;
-    }
-    
-    public LocalDateTime getBookingDateStart() {
-        return bookingDateStart;
-    }
-    
-    public void setBookingDateStart(LocalDateTime bookingDateStart) {
-        this.bookingDateStart = bookingDateStart;
-    }
-    
-    public LocalDateTime getBookingDateEnd() {
-        return bookingDateEnd;
-    }
-    
-    public void setBookingDateEnd(LocalDateTime bookingDateEnd) {
-        this.bookingDateEnd = bookingDateEnd;
-    }
-    
-    public String getHotelName() {
-        return hotelName;
-    }
-    
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
-    }
-    
-    public String getHotelAddress() {
-        return hotelAddress;
-    }
-    
-    public void setHotelAddress(String hotelAddress) {
-        this.hotelAddress = hotelAddress;
-    }
-    
-    public String getRoomType() {
-        return roomType;
-    }
-    
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-    
-    public List<String> getGuestNames() {
-        return guestNames;
-    }
-    
-    public void setGuestNames(List<String> guestNames) {
-        this.guestNames = guestNames;
-    }
-    
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-    
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-    
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-    
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-    
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-    
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-    
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
     }
 }
