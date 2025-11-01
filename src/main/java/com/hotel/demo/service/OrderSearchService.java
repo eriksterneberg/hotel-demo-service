@@ -8,8 +8,6 @@ import com.hotel.demo.model.dto.SearchResponse;
 import com.hotel.demo.model.dto.SearchResult;
 import com.hotel.demo.model.entity.HotelBookingOrder;
 import com.hotel.demo.repository.OrderRepository;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -34,19 +32,9 @@ public class OrderSearchService {
     );
     
     private final OrderRepository orderRepository;
-    private final Counter searchRequestCounter;
-    private final Counter searchErrorCounter;
-    private final Timer searchLatencyTimer;
     
-    public OrderSearchService(
-            OrderRepository orderRepository,
-            Counter searchRequestCounter,
-            Counter searchErrorCounter,
-            Timer searchLatencyTimer) {
+    public OrderSearchService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.searchRequestCounter = searchRequestCounter;
-        this.searchErrorCounter = searchErrorCounter;
-        this.searchLatencyTimer = searchLatencyTimer;
     }
     
     /**
@@ -57,60 +45,54 @@ public class OrderSearchService {
      */
     public SearchResponse searchByEmail(SearchRequest request) {
         long startTime = System.currentTimeMillis();
-        searchRequestCounter.increment();
         
         log.debug("Searching orders for email (masked): ***@{}", 
                   extractDomain(request.email()));
         
-        return searchLatencyTimer.record(() -> {
-            try {
-                // Validate email format
-                validateEmail(request.email());
-                
-                // Perform exact match search
-                List<HotelBookingOrder> orders = orderRepository.findByCustomerEmail(request.email());
-                
-                // Convert to search results with 100% confidence
-                List<SearchResult> results = orders.stream()
-                    .map(order -> toSearchResult(order, 100))
-                    .sorted(Comparator.comparing(SearchResult::confidenceScore).reversed())
-                    .filter(result -> result.confidenceScore() >= request.minConfidenceThreshold())
-                    .toList();
-                
-                long executionTime = System.currentTimeMillis() - startTime;
-                
-                // Count exact matches
-                long exactCount = results.stream()
-                    .filter(SearchResult::isExactMatch)
-                    .count();
-                
-                SearchMetadata metadata = new SearchMetadata(
-                    maskEmail(request.email()),
-                    results.size(),
-                    request.minConfidenceThreshold(),
-                    executionTime,
-                    (int) exactCount,
-                    0 // No fuzzy matches in MVP
-                );
-                
-                log.info("Search completed: {} results found in {}ms", 
-                         results.size(), executionTime);
-                
-                return new SearchResponse(results, metadata);
-                
-            } catch (InvalidEmailException e) {
-                searchErrorCounter.increment();
-                throw e;
-            } catch (DataAccessException e) {
-                searchErrorCounter.increment();
-                log.error("Database error during search", e);
-                throw new DatabaseConnectionException("Failed to query database", e);
-            } catch (Exception e) {
-                searchErrorCounter.increment();
-                log.error("Unexpected error during search", e);
-                throw new RuntimeException("Search failed", e);
-            }
-        });
+        try {
+            // Validate email format
+            validateEmail(request.email());
+            
+            // Perform exact match search
+            List<HotelBookingOrder> orders = orderRepository.findByCustomerEmail(request.email());
+            
+            // Convert to search results with 100% confidence
+            List<SearchResult> results = orders.stream()
+                .map(order -> toSearchResult(order, 100))
+                .sorted(Comparator.comparing(SearchResult::confidenceScore).reversed())
+                .filter(result -> result.confidenceScore() >= request.minConfidenceThreshold())
+                .toList();
+            
+            long executionTime = System.currentTimeMillis() - startTime;
+            
+            // Count exact matches
+            long exactCount = results.stream()
+                .filter(SearchResult::isExactMatch)
+                .count();
+            
+            SearchMetadata metadata = new SearchMetadata(
+                maskEmail(request.email()),
+                results.size(),
+                request.minConfidenceThreshold(),
+                executionTime,
+                (int) exactCount,
+                0 // No fuzzy matches in MVP
+            );
+            
+            log.info("Search completed: {} results found in {}ms", 
+                     results.size(), executionTime);
+            
+            return new SearchResponse(results, metadata);
+            
+        } catch (InvalidEmailException e) {
+            throw e;
+        } catch (DataAccessException e) {
+            log.error("Database error during search", e);
+            throw new DatabaseConnectionException("Failed to query database", e);
+        } catch (Exception e) {
+            log.error("Unexpected error during search", e);
+            throw new RuntimeException("Search failed", e);
+        }
     }
     
     /**

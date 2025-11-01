@@ -42,11 +42,6 @@ dependencies {
 	// Encryption
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
 	
-	// Observability
-	implementation("io.micrometer:micrometer-registry-prometheus")
-	implementation("io.micrometer:micrometer-tracing-bridge-otel")
-	implementation("io.opentelemetry:opentelemetry-exporter-otlp")
-	
 	// Logging
 	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 	

@@ -8,8 +8,6 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.err</target>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeMdcKeyName>traceId</includeMdcKeyName>
-            <includeMdcKeyName>spanId</includeMdcKeyName>
             <customFields>{"application":"hotel-demo-service"}</customFields>
         </encoder>
     </appender>
