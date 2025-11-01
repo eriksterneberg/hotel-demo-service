@@ -15,6 +15,12 @@ java {
 	}
 }
 
+configurations {
+	compileOnly {
+		extendsFrom(configurations.annotationProcessor.get())
+	}
+}
+
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
 	archiveFileName.set("hotel-demo-service.jar")
 }
@@ -32,6 +38,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	
+	// Lombok
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+	testCompileOnly("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 	
 	// Fuzzy matching
 	implementation("org.apache.commons:commons-text:1.11.0")

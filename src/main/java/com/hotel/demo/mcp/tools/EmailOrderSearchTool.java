@@ -3,8 +3,8 @@ package com.hotel.demo.mcp.tools;
 import com.hotel.demo.model.dto.SearchRequest;
 import com.hotel.demo.model.dto.SearchResponse;
 import com.hotel.demo.service.OrderSearchService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Component;
@@ -13,16 +13,12 @@ import org.springframework.stereotype.Component;
  * MCP Tool for searching hotel booking orders by email address.
  * This tool exposes order search functionality to AI assistants via the Model Context Protocol.
  */
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class EmailOrderSearchTool {
     
-    private static final Logger log = LoggerFactory.getLogger(EmailOrderSearchTool.class);
-    
     private final OrderSearchService orderSearchService;
-    
-    public EmailOrderSearchTool(OrderSearchService orderSearchService) {
-        this.orderSearchService = orderSearchService;
-    }
     
     /**
      * Search hotel booking orders by customer email address.

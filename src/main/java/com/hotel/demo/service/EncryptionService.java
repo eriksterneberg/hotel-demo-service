@@ -1,8 +1,8 @@
 package com.hotel.demo.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +10,13 @@ import org.springframework.stereotype.Service;
  * Service for encrypting and decrypting PII fields.
  * Uses Jasypt for field-level encryption.
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class EncryptionService {
     
-    private static final Logger log = LoggerFactory.getLogger(EncryptionService.class);
-    
+    @Qualifier("jasyptStringEncryptor")
     private final StringEncryptor encryptor;
-    
-    public EncryptionService(@Qualifier("jasyptStringEncryptor") StringEncryptor encryptor) {
-        this.encryptor = encryptor;
-    }
     
     /**
      * Encrypt a plain text value.
