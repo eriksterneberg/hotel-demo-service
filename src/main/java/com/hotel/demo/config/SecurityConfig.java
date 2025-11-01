@@ -7,6 +7,7 @@ import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * Security configuration for PII encryption.
@@ -30,8 +31,11 @@ public class SecurityConfig {
     
     /**
      * Creates the Jasypt String Encryptor bean for encrypting/decrypting sensitive data.
+     * Marked as @Primary to resolve ambiguity with the lazyJasyptStringEncryptor bean
+     * created by the Jasypt library.
      */
     @Bean("jasyptStringEncryptor")
+    @Primary
     public StringEncryptor stringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();

@@ -17,14 +17,14 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create Spring Boot 3.5.7 project with Java 21 using Spring Initializr (build.gradle, settings.gradle, gradle.properties)
-- [ ] T002 [P] Configure Gradle build with dependencies in build.gradle (Spring Boot Web, Spring Data Cassandra, Apache Commons Text 1.11.0, Micrometer, OpenTelemetry, Logback, Jasypt, JUnit 5, Mockito, Testcontainers)
-- [ ] T003 [P] Create Makefile with targets (build, test, run, clean, check, help, docker-build, docker-run, coverage, format) per constitution requirement
-- [ ] T004 [P] Configure .gitignore for Java/Gradle/IDE files
-- [ ] T005 [P] Create project package structure in src/main/java/com/hotel/demo/ (config/, mcp/, controller/, service/, repository/, model/, util/, exception/)
-- [ ] T006 [P] Create test package structure in src/test/java/com/hotel/demo/ (integration/, contract/, unit/)
-- [ ] T007 [P] Initialize README.md with project description, build/run/test commands using Makefile, technology stack, and learning objectives
-- [ ] T008 [P] Create docker-compose.yml with Cassandra 4.1 service definition for local development
+- [x] T001 Create Spring Boot 3.5.7 project with Java 21 using Spring Initializr (build.gradle, settings.gradle, gradle.properties)
+- [x] T002 [P] Configure Gradle build with dependencies in build.gradle (Spring Boot Web, Spring Data Cassandra, Apache Commons Text 1.11.0, Micrometer, OpenTelemetry, Logback, Jasypt, JUnit 5, Mockito, Testcontainers)
+- [x] T003 [P] Create Makefile with targets (build, test, run, clean, check, help, docker-build, docker-run, coverage, format) per constitution requirement
+- [x] T004 [P] Configure .gitignore for Java/Gradle/IDE files
+- [x] T005 [P] Create project package structure in src/main/java/com/hotel/demo/ (config/, mcp/, controller/, service/, repository/, model/, util/, exception/)
+- [x] T006 [P] Create test package structure in src/test/java/com/hotel/demo/ (integration/, contract/, unit/)
+- [x] T007 [P] Initialize README.md with project description, build/run/test commands using Makefile, technology stack, and learning objectives
+- [x] T008 [P] Create docker-compose.yml with Cassandra 4.1 service definition for local development
 
 ---
 
@@ -34,20 +34,20 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 Create Cassandra schema in src/main/resources/cassandra/schema.cql (keyspace hotel_demo, booking_orders table with SASI index on customer_email)
-- [ ] T010 [P] Create application.yml configuration with Cassandra connection settings, observability configuration, and encryption key references
-- [ ] T011 [P] Create application-test.yml with Testcontainers Cassandra configuration for integration tests
-- [ ] T012 [P] Implement CassandraConfig.java in src/main/java/com/hotel/demo/config/ (Spring Data Cassandra configuration, connection pool settings)
-- [ ] T013 [P] Implement SecurityConfig.java with Jasypt encryption configuration (AES-256-GCM, key externalization via environment variables)
-- [ ] T014 [P] Implement ObservabilityConfig.java with Micrometer registry, OpenTelemetry tracing setup, and custom metrics
-- [ ] T015 [P] Create logback-spring.xml with structured JSON logging, PII masking converter, async appenders
-- [ ] T016 [P] Implement PiiMaskingConverter.java in src/main/java/com/hotel/demo/util/ for email/PII log masking
-- [ ] T017 [P] Create OrderStatus enum in src/main/java/com/hotel/demo/model/entity/ (PENDING, CONFIRMED, CHECKED_IN, CHECKED_OUT, CANCELLED, NO_SHOW)
-- [ ] T018 [P] Implement GlobalExceptionHandler.java in src/main/java/com/hotel/demo/exception/ with @ControllerAdvice for centralized error handling
-- [ ] T019 [P] Create OrderSearchException.java custom exception classes (InvalidEmailException, DatabaseConnectionException, SearchTimeoutException)
-- [ ] T020 [P] Create test-data.cql with 10 sample hotel booking orders in src/main/resources/cassandra/ (covering exact match, fuzzy match, multiple orders scenarios)
-- [ ] T021 Create HotelDemoServiceApplication.java main application class in src/main/java/com/hotel/demo/
-- [ ] T022 Verify Cassandra schema creation and test data loading using Makefile target (make db-setup)
+- [x] T009 Create Cassandra schema in src/main/resources/cassandra/schema.cql (keyspace hotel_demo, booking_orders table with SASI index on customer_email)
+- [x] T010 [P] Create application.yml configuration with Cassandra connection settings, observability configuration, and encryption key references
+- [x] T011 [P] Create application-test.yml with Testcontainers Cassandra configuration for integration tests
+- [x] T012 [P] Implement CassandraConfig.java in src/main/java/com/hotel/demo/config/ (Spring Data Cassandra configuration, connection pool settings)
+- [x] T013 [P] Implement SecurityConfig.java with Jasypt encryption configuration (AES-256-GCM, key externalization via environment variables)
+- [x] T014 [P] Implement ObservabilityConfig.java with Micrometer registry, OpenTelemetry tracing setup, and custom metrics
+- [x] T015 [P] Create logback-spring.xml with structured JSON logging, PII masking converter, async appenders
+- [x] T016 [P] Implement PiiMaskingConverter.java in src/main/java/com/hotel/demo/util/ for email/PII log masking
+- [x] T017 [P] Create OrderStatus enum in src/main/java/com/hotel/demo/model/entity/ (PENDING, CONFIRMED, CHECKED_IN, CHECKED_OUT, CANCELLED, NO_SHOW)
+- [x] T018 [P] Implement GlobalExceptionHandler.java in src/main/java/com/hotel/demo/exception/ with @ControllerAdvice for centralized error handling
+- [x] T019 [P] Create OrderSearchException.java custom exception classes (InvalidEmailException, DatabaseConnectionException, SearchTimeoutException)
+- [x] T020 [P] Create test-data.cql with 10 sample hotel booking orders in src/main/resources/cassandra/ (covering exact match, fuzzy match, multiple orders scenarios)
+- [x] T021 Create HotelDemoServiceApplication.java main application class in src/main/java/com/hotel/demo/
+- [x] T022 Verify Cassandra schema creation and test data loading using Makefile target (make db-setup)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -61,32 +61,32 @@
 
 ### Tests for User Story 1 (TDD - Write FIRST, ensure FAIL)
 
-- [ ] T023 [P] [US1] Create HotelBookingOrder entity test in src/test/java/com/hotel/demo/unit/model/HotelBookingOrderTest.java (validation rules, state transitions, date range validation)
-- [ ] T024 [P] [US1] Create SearchRequest DTO test in src/test/java/com/hotel/demo/unit/model/SearchRequestTest.java (email validation, customer ID validation, default threshold)
-- [ ] T025 [P] [US1] Create SearchResult DTO test in src/test/java/com/hotel/demo/unit/model/SearchResultTest.java (confidence score validation, derived fields)
-- [ ] T026 [P] [US1] Contract test for MCP tool exact match in src/test/java/com/hotel/demo/contract/EmailOrderSearchToolExactMatchTest.java (verify input/output schema matches mcp-tool-schema.json, test example 1 "Exact email match")
-- [ ] T027 [P] [US1] Integration test for exact email search in src/test/java/com/hotel/demo/integration/ExactEmailSearchIntegrationTest.java (Testcontainers Cassandra, load test data, verify query results)
-- [ ] T028 [P] [US1] Unit test for OrderRepository exact match in src/test/java/com/hotel/demo/unit/repository/OrderRepositoryTest.java (verify findByCustomerEmail query)
+- [x] T023 [P] [US1] Create HotelBookingOrder entity test in src/test/java/com/hotel/demo/unit/model/HotelBookingOrderTest.java (validation rules, state transitions, date range validation)
+- [x] T024 [P] [US1] Create SearchRequest DTO test in src/test/java/com/hotel/demo/unit/model/SearchRequestTest.java (email validation, customer ID validation, default threshold)
+- [x] T025 [P] [US1] Create SearchResult DTO test in src/test/java/com/hotel/demo/unit/model/SearchResultTest.java (confidence score validation, derived fields)
+- [x] T026 [P] [US1] Contract test for MCP tool exact match in src/test/java/com/hotel/demo/contract/EmailOrderSearchToolExactMatchTest.java (verify input/output schema matches mcp-tool-schema.json, test example 1 "Exact email match")
+- [x] T027 [P] [US1] Integration test for exact email search in src/test/java/com/hotel/demo/integration/ExactEmailSearchIntegrationTest.java (Testcontainers Cassandra, load test data, verify query results)
+- [x] T028 [P] [US1] Unit test for OrderRepository exact match in src/test/java/com/hotel/demo/unit/repository/OrderRepositoryTest.java (verify findByCustomerEmail query)
 
 ### Implementation for User Story 1
 
-- [ ] T029 [P] [US1] Create HotelBookingOrder entity in src/main/java/com/hotel/demo/model/entity/HotelBookingOrder.java (all 13 fields per data-model.md, @Table annotation, Bean Validation annotations)
-- [ ] T030 [P] [US1] Create SearchRequest DTO in src/main/java/com/hotel/demo/model/dto/SearchRequest.java (email, customerId, minConfidenceThreshold fields with validation)
-- [ ] T031 [P] [US1] Create SearchResult record in src/main/java/com/hotel/demo/model/dto/SearchResult.java (all order fields + confidenceScore, derived methods)
-- [ ] T032 [P] [US1] Create SearchMetadata record in src/main/java/com/hotel/demo/model/dto/SearchMetadata.java (searchEmail, resultCount, executionTimeMs, exactMatchCount, fuzzyMatchCount)
-- [ ] T033 [P] [US1] Create CustomerSession record in src/main/java/com/hotel/demo/model/entity/CustomerSession.java (sessionId, customerId, sessionStart, searchCount, searchedEmails)
-- [ ] T034 [US1] Create OrderRepository interface in src/main/java/com/hotel/demo/repository/OrderRepository.java extending CassandraRepository (findByCustomerEmail method)
-- [ ] T035 [US1] Implement EncryptionService in src/main/java/com/hotel/demo/service/EncryptionService.java (encrypt/decrypt methods using Jasypt for PII fields)
-- [ ] T036 [US1] Implement OrderSearchService in src/main/java/com/hotel/demo/service/OrderSearchService.java (searchByEmailExact method returning List<SearchResult>, maps entities to DTOs with 100% confidence, applies encryption/decryption)
-- [ ] T037 [US1] Create OrderSearchController in src/main/java/com/hotel/demo/controller/OrderSearchController.java with POST /api/orders/search endpoint (REST endpoint for testing, delegates to OrderSearchService)
-- [ ] T038 [US1] Implement EmailOrderSearchTool in src/main/java/com/hotel/demo/mcp/tools/EmailOrderSearchTool.java (MCP tool implementation, invokes OrderSearchService, formats response per mcp-tool-schema.json)
-- [ ] T039 [US1] Create McpToolRequest record in src/main/java/com/hotel/demo/mcp/models/McpToolRequest.java (email, customerId, minConfidenceThreshold fields)
-- [ ] T040 [US1] Create McpToolResponse record in src/main/java/com/hotel/demo/mcp/models/McpToolResponse.java (results array, searchMetadata)
-- [ ] T041 [US1] Add metrics collection in OrderSearchService (search count, latency histogram, error count using Micrometer)
-- [ ] T042 [US1] Add distributed tracing spans in OrderSearchService (OpenTelemetry, span for search operation with attributes)
-- [ ] T043 [US1] Add structured logging in OrderSearchService (log search requests with masked email, log result counts, log errors)
-- [ ] T044 [US1] Run all User Story 1 tests and verify they pass (make test)
-- [ ] T045 [US1] Verify test coverage ≥95% for User Story 1 code (make coverage, check JaCoCo report)
+- [x] T029 [P] [US1] Create HotelBookingOrder entity in src/main/java/com/hotel/demo/model/entity/HotelBookingOrder.java (all 13 fields per data-model.md, @Table annotation, Bean Validation annotations)
+- [x] T030 [P] [US1] Create SearchRequest DTO in src/main/java/com/hotel/demo/model/dto/SearchRequest.java (email, customerId, minConfidenceThreshold fields with validation)
+- [x] T031 [P] [US1] Create SearchResult record in src/main/java/com/hotel/demo/model/dto/SearchResult.java (all order fields + confidenceScore, derived methods)
+- [x] T032 [P] [US1] Create SearchMetadata record in src/main/java/com/hotel/demo/model/dto/SearchMetadata.java (searchEmail, resultCount, executionTimeMs, exactMatchCount, fuzzyMatchCount)
+- [x] T033 [P] [US1] Create CustomerSession record in src/main/java/com/hotel/demo/model/entity/CustomerSession.java (sessionId, customerId, sessionStart, searchCount, searchedEmails)
+- [x] T034 [US1] Create OrderRepository interface in src/main/java/com/hotel/demo/repository/OrderRepository.java extending CassandraRepository (findByCustomerEmail method)
+- [x] T035 [US1] Implement EncryptionService in src/main/java/com/hotel/demo/service/EncryptionService.java (encrypt/decrypt methods using Jasypt for PII fields)
+- [x] T036 [US1] Implement OrderSearchService in src/main/java/com/hotel/demo/service/OrderSearchService.java (searchByEmailExact method returning List<SearchResult>, maps entities to DTOs with 100% confidence, applies encryption/decryption)
+- [x] T037 [US1] Create OrderSearchController in src/main/java/com/hotel/demo/controller/OrderSearchController.java with POST /api/orders/search endpoint (REST endpoint for testing, delegates to OrderSearchService)
+- [x] T038 [US1] Implement EmailOrderSearchTool in src/main/java/com/hotel/demo/mcp/tools/EmailOrderSearchTool.java (MCP tool implementation, invokes OrderSearchService, formats response per mcp-tool-schema.json)
+- [x] T039 [US1] Create McpToolRequest record in src/main/java/com/hotel/demo/mcp/models/McpToolRequest.java (email, customerId, minConfidenceThreshold fields)
+- [x] T040 [US1] Create McpToolResponse record in src/main/java/com/hotel/demo/mcp/models/McpToolResponse.java (results array, searchMetadata)
+- [x] T041 [US1] Add metrics collection in OrderSearchService (search count, latency histogram, error count using Micrometer)
+- [x] T042 [US1] Add distributed tracing spans in OrderSearchService (OpenTelemetry, span for search operation with attributes)
+- [x] T043 [US1] Add structured logging in OrderSearchService (log search requests with masked email, log result counts, log errors)
+- [x] T044 [US1] Run all User Story 1 tests and verify they pass (make test)
+- [x] T045 [US1] Verify test coverage ≥95% for User Story 1 code (make coverage, check JaCoCo report)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - exact email search working end-to-end
 
