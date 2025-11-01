@@ -1,0 +1,12 @@
+spring:
+  cassandra:
+    keyspace-name: hotel_demo_test
+    contact-points: ${testcontainers.cassandra.host:localhost}
+    port: ${testcontainers.cassandra.port:9042}
+    local-datacenter: datacenter1
+
+logging:
+  level:
+    root: WARN
+    com.hotel.demo: INFO
+    org.testcontainers: INFO

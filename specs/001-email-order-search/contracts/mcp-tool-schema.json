@@ -1,0 +1,445 @@
+{
+  "$schema": "https://spec.modelcontextprotocol.io/schema/2024-11-05/tool-schema.json",
+  "name": "search_orders_by_email",
+  "version": "1.0.0",
+  "description": "Search hotel booking orders by customer email with fuzzy matching support. Returns all matching orders with confidence scores, sorted by match quality (descending).",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string",
+        "format": "email",
+        "maxLength": 100,
+        "description": "Customer email address to search for. Supports exact and fuzzy matching (up to 10% character errors).",
+        "examples": [
+          "john.doe@example.com",
+          "jane.smith@hotel.com"
+        ]
+      },
+      "customerId": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50,
+        "description": "Post-sales staff customer ID for authentication and audit tracking (demo authentication only).",
+        "examples": [
+          "staff-12345",
+          "cs-agent-001"
+        ]
+      },
+      "minConfidenceThreshold": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 100,
+        "default": 50,
+        "description": "Minimum confidence score (0-100%) for results to be included. Default is 50%. Exact matches always score 100%."
+      }
+    },
+    "required": [
+      "email",
+      "customerId"
+    ],
+    "additionalProperties": false
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "results": {
+        "type": "array",
+        "description": "Array of matching hotel booking orders, sorted by confidence score (descending). Empty array if no matches found above threshold.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "orderId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique order identifier",
+              "examples": [
+                "550e8400-e29b-41d4-a716-446655440000"
+              ]
+            },
+            "customerEmail": {
+              "type": "string",
+              "format": "email",
+              "description": "Customer email address associated with the booking"
+            },
+            "bookingDateStart": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Check-in date and time (ISO 8601 format)",
+              "examples": [
+                "2025-12-24T15:00:00Z"
+              ]
+            },
+            "bookingDateEnd": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Check-out date and time (ISO 8601 format)",
+              "examples": [
+                "2025-12-27T11:00:00Z"
+              ]
+            },
+            "hotelName": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Name of the hotel"
+            },
+            "hotelAddress": {
+              "type": "string",
+              "maxLength": 500,
+              "description": "Full address of the hotel"
+            },
+            "roomType": {
+              "type": "string",
+              "maxLength": 100,
+              "description": "Type of room booked",
+              "examples": [
+                "Deluxe Suite",
+                "Standard Double Room",
+                "Executive King"
+              ]
+            },
+            "guestNames": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string"
+              },
+              "description": "Names of all guests (primary and additional)"
+            },
+            "paymentMethod": {
+              "type": "string",
+              "description": "Payment method used for booking",
+              "examples": [
+                "Credit Card - Visa",
+                "PayPal",
+                "Bank Transfer"
+              ]
+            },
+            "totalAmount": {
+              "type": "number",
+              "format": "decimal",
+              "minimum": 0,
+              "description": "Total booking amount in USD",
+              "examples": [
+                599.99,
+                1250.00
+              ]
+            },
+            "orderStatus": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "CONFIRMED",
+                "CHECKED_IN",
+                "CHECKED_OUT",
+                "CANCELLED",
+                "NO_SHOW"
+              ],
+              "description": "Current status of the booking order"
+            },
+            "confidenceScore": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Match confidence score (0-100%). 100 = exact match, 50-99 = fuzzy match. Results sorted by this value descending."
+            }
+          },
+          "required": [
+            "orderId",
+            "customerEmail",
+            "bookingDateStart",
+            "bookingDateEnd",
+            "hotelName",
+            "hotelAddress",
+            "roomType",
+            "guestNames",
+            "paymentMethod",
+            "totalAmount",
+            "orderStatus",
+            "confidenceScore"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "searchMetadata": {
+        "type": "object",
+        "description": "Metadata about the search operation",
+        "properties": {
+          "searchEmail": {
+            "type": "string",
+            "format": "email",
+            "description": "The email address that was searched for"
+          },
+          "resultCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of results returned"
+          },
+          "minConfidenceThreshold": {
+            "type": "integer",
+            "minimum": 50,
+            "maximum": 100,
+            "description": "Confidence threshold applied to filter results"
+          },
+          "executionTimeMs": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Search execution time in milliseconds"
+          },
+          "exactMatchCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of exact matches (confidence = 100%)"
+          },
+          "fuzzyMatchCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of fuzzy matches (confidence 50-99%)"
+          }
+        },
+        "required": [
+          "searchEmail",
+          "resultCount",
+          "minConfidenceThreshold",
+          "executionTimeMs",
+          "exactMatchCount",
+          "fuzzyMatchCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "results",
+      "searchMetadata"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    {
+      "code": "INVALID_EMAIL_FORMAT",
+      "message": "The provided email address is not in a valid format",
+      "httpStatus": 400
+    },
+    {
+      "code": "MISSING_CUSTOMER_ID",
+      "message": "Customer ID is required for authentication",
+      "httpStatus": 400
+    },
+    {
+      "code": "INVALID_CONFIDENCE_THRESHOLD",
+      "message": "Confidence threshold must be between 50 and 100",
+      "httpStatus": 400
+    },
+    {
+      "code": "DATABASE_CONNECTION_ERROR",
+      "message": "Unable to connect to the database. Please try again later.",
+      "httpStatus": 503
+    },
+    {
+      "code": "DATABASE_QUERY_ERROR",
+      "message": "An error occurred while querying the database",
+      "httpStatus": 500
+    },
+    {
+      "code": "SEARCH_TIMEOUT",
+      "message": "Search operation exceeded maximum execution time (5 seconds)",
+      "httpStatus": 504
+    },
+    {
+      "code": "INTERNAL_SERVER_ERROR",
+      "message": "An unexpected error occurred while processing the search",
+      "httpStatus": 500
+    }
+  ],
+  "examples": [
+    {
+      "name": "Exact email match",
+      "description": "Search for a customer using exact email address",
+      "input": {
+        "email": "john.doe@example.com",
+        "customerId": "staff-12345"
+      },
+      "output": {
+        "results": [
+          {
+            "orderId": "550e8400-e29b-41d4-a716-446655440000",
+            "customerEmail": "john.doe@example.com",
+            "bookingDateStart": "2025-12-24T15:00:00Z",
+            "bookingDateEnd": "2025-12-27T11:00:00Z",
+            "hotelName": "Grand Plaza Hotel",
+            "hotelAddress": "123 Main Street, New York, NY 10001, USA",
+            "roomType": "Deluxe Suite",
+            "guestNames": [
+              "John Doe",
+              "Jane Doe"
+            ],
+            "paymentMethod": "Credit Card - Visa",
+            "totalAmount": 899.99,
+            "orderStatus": "CONFIRMED",
+            "confidenceScore": 100
+          }
+        ],
+        "searchMetadata": {
+          "searchEmail": "john.doe@example.com",
+          "resultCount": 1,
+          "minConfidenceThreshold": 50,
+          "executionTimeMs": 45,
+          "exactMatchCount": 1,
+          "fuzzyMatchCount": 0
+        }
+      }
+    },
+    {
+      "name": "Fuzzy email match with typo",
+      "description": "Search with a typo in the email address (missing 'h')",
+      "input": {
+        "email": "jone.doe@example.com",
+        "customerId": "staff-12345",
+        "minConfidenceThreshold": 70
+      },
+      "output": {
+        "results": [
+          {
+            "orderId": "550e8400-e29b-41d4-a716-446655440000",
+            "customerEmail": "john.doe@example.com",
+            "bookingDateStart": "2025-12-24T15:00:00Z",
+            "bookingDateEnd": "2025-12-27T11:00:00Z",
+            "hotelName": "Grand Plaza Hotel",
+            "hotelAddress": "123 Main Street, New York, NY 10001, USA",
+            "roomType": "Deluxe Suite",
+            "guestNames": [
+              "John Doe",
+              "Jane Doe"
+            ],
+            "paymentMethod": "Credit Card - Visa",
+            "totalAmount": 899.99,
+            "orderStatus": "CONFIRMED",
+            "confidenceScore": 95
+          }
+        ],
+        "searchMetadata": {
+          "searchEmail": "jone.doe@example.com",
+          "resultCount": 1,
+          "minConfidenceThreshold": 70,
+          "executionTimeMs": 123,
+          "exactMatchCount": 0,
+          "fuzzyMatchCount": 1
+        }
+      }
+    },
+    {
+      "name": "No matches found",
+      "description": "Search for email that doesn't exist in the system",
+      "input": {
+        "email": "nonexistent@example.com",
+        "customerId": "staff-12345"
+      },
+      "output": {
+        "results": [],
+        "searchMetadata": {
+          "searchEmail": "nonexistent@example.com",
+          "resultCount": 0,
+          "minConfidenceThreshold": 50,
+          "executionTimeMs": 34,
+          "exactMatchCount": 0,
+          "fuzzyMatchCount": 0
+        }
+      }
+    },
+    {
+      "name": "Multiple orders for same customer",
+      "description": "Customer with multiple booking orders",
+      "input": {
+        "email": "frequent.traveler@example.com",
+        "customerId": "staff-67890"
+      },
+      "output": {
+        "results": [
+          {
+            "orderId": "650e8400-e29b-41d4-a716-446655440001",
+            "customerEmail": "frequent.traveler@example.com",
+            "bookingDateStart": "2025-11-15T14:00:00Z",
+            "bookingDateEnd": "2025-11-18T10:00:00Z",
+            "hotelName": "Seaside Resort",
+            "hotelAddress": "456 Beach Road, Miami, FL 33139, USA",
+            "roomType": "Ocean View King",
+            "guestNames": [
+              "Alex Traveler"
+            ],
+            "paymentMethod": "Credit Card - Mastercard",
+            "totalAmount": 650.00,
+            "orderStatus": "CONFIRMED",
+            "confidenceScore": 100
+          },
+          {
+            "orderId": "750e8400-e29b-41d4-a716-446655440002",
+            "customerEmail": "frequent.traveler@example.com",
+            "bookingDateStart": "2025-10-20T16:00:00Z",
+            "bookingDateEnd": "2025-10-22T12:00:00Z",
+            "hotelName": "Mountain Lodge",
+            "hotelAddress": "789 Alpine Way, Aspen, CO 81611, USA",
+            "roomType": "Standard Double",
+            "guestNames": [
+              "Alex Traveler",
+              "Sam Traveler"
+            ],
+            "paymentMethod": "PayPal",
+            "totalAmount": 320.00,
+            "orderStatus": "CHECKED_OUT",
+            "confidenceScore": 100
+          }
+        ],
+        "searchMetadata": {
+          "searchEmail": "frequent.traveler@example.com",
+          "resultCount": 2,
+          "minConfidenceThreshold": 50,
+          "executionTimeMs": 67,
+          "exactMatchCount": 2,
+          "fuzzyMatchCount": 0
+        }
+      }
+    }
+  ],
+  "performance": {
+    "expectedLatency": {
+      "p50": "< 500ms",
+      "p95": "< 1000ms",
+      "p99": "< 2000ms"
+    },
+    "maxConcurrentRequests": 10,
+    "rateLimit": {
+      "requestsPerMinute": 100,
+      "perCustomer": true
+    }
+  },
+  "security": {
+    "authentication": {
+      "type": "customer_id",
+      "description": "Demo authentication using customer ID. Production would use OAuth 2.0."
+    },
+    "dataProtection": {
+      "piiFields": [
+        "customerEmail",
+        "guestNames",
+        "paymentMethod"
+      ],
+      "encryptionAtRest": true,
+      "loggingRestrictions": "PII fields must never be logged in plain text"
+    }
+  },
+  "metadata": {
+    "category": "search",
+    "tags": [
+      "hotel",
+      "booking",
+      "order",
+      "search",
+      "fuzzy-match",
+      "customer-service"
+    ],
+    "author": "Hotel Demo Service Team",
+    "license": "MIT",
+    "documentation": "https://github.com/eriksterneberg/hotel-demo-service/blob/main/specs/001-email-order-search/README.md"
+  }
+}

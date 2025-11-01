@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <conversionRule conversionWord="maskPii" 
+                    converterClass="com.hotel.demo.util.PiiMaskingConverter"/>
+    
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>traceId</includeMdcKeyName>
+            <includeMdcKeyName>spanId</includeMdcKeyName>
+            <customFields>{"application":"hotel-demo-service"}</customFields>
+        </encoder>
+    </appender>
+    
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="CONSOLE"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+    </appender>
+    
+    <root level="INFO">
+        <appender-ref ref="ASYNC"/>
+    </root>
+    
+    <logger name="com.hotel.demo" level="DEBUG"/>
+    <logger name="org.springframework.data.cassandra" level="DEBUG"/>
+</configuration>

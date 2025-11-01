@@ -16,7 +16,7 @@ Sync Impact Report:
 
 # Hotel Demo Service Constitution
 
-**Purpose**: This constitution governs the development of the Hotel Demo Service, a Model Context Protocol (MCP) Java Spring Boot application designed to teach colleagues about GenAI best practices.
+**Purpose**: This constitution governs the development of the Hotel Demo Service, a Model Context Protocol (MCP) Java Spring Boot application designed to show case GenAI best practices.
 
 ## Core Principles
 
